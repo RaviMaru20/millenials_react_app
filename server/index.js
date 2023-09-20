@@ -27,17 +27,6 @@ const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-const cspConfig = {
-  directives: {
-    defaultSrc: ["'self'"],
-    scriptSrc: ["'self'", "example.com"],
-    styleSrc: ["'self'", "fonts.googleapis.com"],
-    fontSrc: ["'self'", "fonts.gstatic.com"], // Add fonts.gstatic.com as an allowed source
-    imgSrc: ["'self'", "img.example.com"],
-    // Add other directives as needed
-  },
-};
-app.use(helmet.contentSecurityPolicy(cspConfig));
 app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
