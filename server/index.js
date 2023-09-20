@@ -27,19 +27,22 @@ const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+const cspConfig = {
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'", "example.com"],
+    styleSrc: ["'self'", "fonts.googleapis.com"],
+    fontSrc: ["'self'", "fonts.gstatic.com"], // Add fonts.gstatic.com as an allowed source
+    imgSrc: ["'self'", "img.example.com"],
+    // Add other directives as needed
+  },
+};
+app.use(helmet.contentSecurityPolicy(cspConfig));
 app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
-
-app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self' https://fonts.googleapis.com"
-  );
-  next();
-});
 
 /* FILE STORAGE */
 const storage = multer.diskStorage({
