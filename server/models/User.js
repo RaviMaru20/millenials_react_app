@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const UserSchema = new mongoose.Schema(
   {
     firstName: {
@@ -28,13 +27,22 @@ const UserSchema = new mongoose.Schema(
     picturePath: {
       type: String,
       default: "",
+      required: false,
     },
     friends: {
       type: Array,
       default: [],
     },
-    location: String,
-    occupation: String,
+    location: {
+      type: String,
+      default: "Mars",
+      required: false,
+    },
+    occupation: {
+      type: String,
+      default: "Humanity",
+      required: false,
+    },
     viewedProfile: Number,
     impressions: Number,
   },

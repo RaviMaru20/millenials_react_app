@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const mode = useSelector((state) => state.mode);
@@ -14,6 +16,7 @@ function App() {
   const isAuth = Boolean(useSelector((state) => state.token));
   return (
     <div className="App">
+      <ToastContainer /> {/* Add the ToastContainer here */}
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />

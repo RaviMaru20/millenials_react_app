@@ -14,6 +14,7 @@ import authRoutes from "./routes/auth.js";
 import postRoutes from "./routes/posts.js";
 import { verifyToken } from "./middleware/auth.js";
 import { createPost } from "./controllers/posts.js";
+import axios from "axios";
 // import User from "./models/User.js";
 // import { users } from "./data/index.js";
 // import { posts } from "./data/index.js";

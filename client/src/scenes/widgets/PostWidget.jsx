@@ -1,8 +1,8 @@
 import {
   ChatBubbleOutlineOutlined,
+  DeleteOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
-  ShareOutlined,
 } from "@mui/icons-material";
 import { Box, Divider, IconButton, Input, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
@@ -10,7 +10,8 @@ import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "state";
+import { toast } from "react-toastify";
+import { deletePost, setPost } from "state";
 
 const PostWidget = ({
   postId,
@@ -49,7 +50,7 @@ const [isAddingComment, setIsAddingComment] = useState(false); // State to toggl
       return; // Prevent adding empty comments
     }
 
-    const response = await fetch(`http://localhost:3001/posts/${postId}/comment`, {
+    const response = await fetch(`${process.env.REACT_APP_SERVER}/posts/${postId}/comment`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -84,8 +85,36 @@ const toggleMuteUnmute = () => {
     setIsMuted(video.muted);
   }
 };
+
+const handleDeletePost = async () => {
+  try {
+    // Send a DELETE request to your server to delete the post
+    await fetch(`${process.env.REACT_APP_SERVER}/posts/${postId}/post`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Dispatch a delete action with the post ID
+    dispatch(deletePost({ postId }));
+    // Show a success toast
+    toast.success('Post deleted successfully!', {
+      position: 'top-right',
+      autoClose: 3000, // Set the duration for which the toast will be displayed
+    });
+  } catch (error) {
+    // Handle errors
+    // Show an error toast
+    toast.error('An error occurred while deleting the post. Please try again later.', {
+      position: 'top-right',
+      autoClose: 5000,
+    });
+  }
+};
+
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
+    const response = await fetch(`${process.env.REACT_APP_SERVER}/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -114,7 +143,7 @@ const toggleMuteUnmute = () => {
     {picturePath.endsWith('.mp3') ? (
       // MP3 audio rendering
       <audio controls style={{ width: '100%', marginTop: '0.75rem' }}>
-        <source src={`http://localhost:3001/assets/${picturePath}`} type='audio/mpeg' />
+        <source src={`${picturePath}`} type='audio/mpeg' />
         Your browser does not support the audio element.
       </audio>
     ) : picturePath.endsWith('.mp4') ? (
@@ -130,9 +159,10 @@ const toggleMuteUnmute = () => {
           ref={videoRef}
         >
           <source
-            src={`http://localhost:3001/assets/${picturePath}`}
+            src={`${picturePath}`}
             type='video/mp4'
           />
+          <source src={`${picturePath}`} type='video/quicktime' />
           Your browser does not support the video element.
         </video>
         <div
@@ -159,7 +189,7 @@ const toggleMuteUnmute = () => {
         height="auto"
         alt="post"
         style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-        src={`http://localhost:3001/assets/${picturePath}`}
+        src={`${picturePath}`}
       />
     )}
   </>
@@ -186,9 +216,12 @@ const toggleMuteUnmute = () => {
           <Typography>{createdAt}</Typography>
         </FlexBetween>
                 
-        <IconButton>
-          <ShareOutlined />
+        {showButton && (
+        // Render the delete button if the showButton prop is true
+        <IconButton onClick={handleDeletePost}>
+          <DeleteOutlineOutlined sx={{ color: primary }} />
         </IconButton>
+      )}
       </FlexBetween>
       {isComments && (
   <Box mt="0.5rem">
@@ -242,6 +275,7 @@ const toggleMuteUnmute = () => {
     </Box>
   </Box>
 )}
+    
     </WidgetWrapper>
   );
 };

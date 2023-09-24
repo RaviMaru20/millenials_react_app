@@ -15,15 +15,18 @@ import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
+import { imageUpload } from "controller/imageUpload";
+import { toast } from "react-toastify";
+import { getRandomName } from "controller/nameGenerator";
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
   lastName: yup.string().required("required"),
   email: yup.string().email("invalid email").required("required"),
   password: yup.string().required("required"),
-  location: yup.string().required("required"),
-  occupation: yup.string().required("required"),
-  picture: yup.string().required("required"),
+  location: yup.string(),
+  occupation: yup.string(),
+  picture: yup.string(),
 });
 
 const loginSchema = yup.object().shape({
@@ -54,48 +57,155 @@ const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
+  const imageUrls = [
+  "https://res.cloudinary.com/dpwq056hv/image/upload/v1695522993/tqe8toea5z7wntvxohv9.jpg",
+  "https://res.cloudinary.com/dpwq056hv/image/upload/v1695522798/yt5ggvyvs9cqpbmfiimm.jpg",
+  "https://res.cloudinary.com/dpwq056hv/image/upload/v1695522656/jq0da95x5nv9pith8wzi.jpg",
+  "https://res.cloudinary.com/dpwq056hv/image/upload/v1695522573/yhrdk8etfhzj3vmgqcus.jpg",
+  "https://res.cloudinary.com/dpwq056hv/image/upload/v1695522510/xvwq2vuomhu2uytink4d.jpg",
+  "https://res.cloudinary.com/dpwq056hv/image/upload/v1695493402/ikvt7oelagamk2avkvts.png"
+];
+
+// Generate a random index
+const randomIndex = Math.floor(Math.random() * imageUrls.length);
+
+// Get the random URL
+const randomImageUrl = imageUrls[randomIndex];
 
   const register = async (values, onSubmitProps) => {
-    // this allows us to send form info with image
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
-    }
-    formData.append("picturePath", values.picture.name);
-
-    const savedUserResponse = await fetch(
-      `http://localhost:3001/auth/register`,
-      {
-        method: "POST",
-        body: formData,
+    try {
+      const formData = new FormData();
+      for (let value in values) {
+        formData.append(value, values[value]);
       }
-    );
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
+      if (!values.picture){
+          formData.append("picturePath", randomImageUrl);
+        }else {
 
-    if (savedUser) {
-      setPageType("login");
+            const imageUrl = await imageUpload(values.picture, toast); // Add toast here
+            formData.append("picturePath", imageUrl);
+        }
+      formData.append(
+        "location",
+        values.location || getRandomName("planet"));
+
+      formData.append(
+        "occupation",
+        values.occupation || getRandomName("occupation"));
+
+      const savedUserResponse = await fetch(
+        `${process.env.REACT_APP_SERVER}/auth/register`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (savedUserResponse.ok) {
+        const savedUser = await savedUserResponse.json();
+        onSubmitProps.resetForm();
+        if (savedUser) {
+          setPageType("login");
+          // Display a success toast message
+          toast.success("Registration successful!", {
+            position: "top-right",
+            autoClose: 5000,
+          });
+        }
+      } else {
+        // Registration failed, handle the error
+        // Display an error toast message
+        const savedUser = await savedUserResponse.json();
+        toast.error(savedUser.error, {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        return
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // Display an error toast message
+      toast.error("An error occurred. Please try again later.", {
+        position: "top-right",
+        autoClose: 5000,
+      });
     }
   };
 
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch(`http://localhost:3001/auth/login`, {
+  try {
+    const loggedInResponse = await fetch(`${process.env.REACT_APP_SERVER}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
-    const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-    if (loggedIn) {
-      dispatch(
-        setLogin({
-          user: loggedIn.user,
-          token: loggedIn.token,
-        })
-      );
-      navigate("/home");
+
+    if (loggedInResponse.ok) {
+      const loggedIn = await loggedInResponse.json();
+      onSubmitProps.resetForm();
+      if (loggedIn) {
+        dispatch(
+          setLogin({
+            user: loggedIn.user,
+            token: loggedIn.token,
+          })
+        );
+        navigate("/home");
+      }
+    } else {
+      // Login failed, handle the error
+      // Display an error toast message at the bottom center
+      toast.error("Login failed. Please check your credentials and try again.", {
+        position: "bottom-center",
+        autoClose: 5000,
+      });
     }
-  };
+  } catch (error) {
+    console.error("Error:", error);
+    // Display an error toast message at the bottom center
+    toast.error("An error occurred. Please try again later.", {
+      position: "bottom-center",
+      autoClose: 5000,
+    });
+  }
+ };
+ const guestLogin = async ( onSubmitProps) => {
+  try {
+    const loggedInResponse = await fetch(`${process.env.REACT_APP_SERVER}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: "guest@login.com", password: "123456789"}),
+    });
+
+    if (loggedInResponse.ok) {
+      const loggedIn = await loggedInResponse.json();
+    //   onSubmitProps.resetForm();
+      if (loggedIn) {
+        dispatch(
+          setLogin({
+            user: loggedIn.user,
+            token: loggedIn.token,
+          })
+        );
+        navigate("/home");
+      }
+    } else {
+      // Login failed, handle the error
+      // Display an error toast message at the bottom center
+      toast.error("Login failed. Please check your credentials and try again.", {
+        position: "bottom-center",
+        autoClose: 5000,
+      });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    // Display an error toast message at the bottom center
+    toast.error("An error occurred. Please try again later.", {
+      position: "bottom-center",
+      autoClose: 5000,
+    });
+  }
+ };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
     if (isLogin) await login(values, onSubmitProps);
@@ -127,6 +237,28 @@ const Form = () => {
               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
           >
+            <TextField
+              label="Email"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.email}
+              name="email"
+              error={Boolean(touched.email) && Boolean(errors.email)}
+              helperText={touched.email && errors.email}
+              sx={{ gridColumn: "span 4" }}
+            />
+            <TextField
+              label="Password"
+              type="password"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.password}
+              name="password"
+              error={Boolean(touched.password) && Boolean(errors.password)}
+              helperText={touched.password && errors.password}
+              sx={{ gridColumn: "span 4" }}
+            />
+            
             {isRegister && (
               <>
                 <TextField
@@ -209,44 +341,43 @@ const Form = () => {
               </>
             )}
 
-            <TextField
-              label="Email"
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.email}
-              name="email"
-              error={Boolean(touched.email) && Boolean(errors.email)}
-              helperText={touched.email && errors.email}
-              sx={{ gridColumn: "span 4" }}
-            />
-            <TextField
-              label="Password"
-              type="password"
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.password}
-              name="password"
-              error={Boolean(touched.password) && Boolean(errors.password)}
-              helperText={touched.password && errors.password}
-              sx={{ gridColumn: "span 4" }}
-            />
+            
           </Box>
 
           {/* BUTTONS */}
           <Box>
+            <FlexBetween >
+
             <Button
               fullWidth
               type="submit"
               sx={{
-                m: "2rem 0",
+                m: "2rem 1rem 2rem 0",
                 p: "1rem",
                 backgroundColor: palette.primary.main,
                 color: palette.background.alt,
                 "&:hover": { color: palette.primary.main },
-              }}
+                
+            }}
             >
               {isLogin ? "LOGIN" : "REGISTER"}
             </Button>
+            <Button
+          fullWidth
+          type="button"
+          onClick={guestLogin}
+          sx={{
+            m: "1rem 0",
+            p: "0.9rem",
+            backgroundColor: '#B4B4B3',
+            color: palette.background.alt,
+            "&:hover": { color: palette.secondary.main },
+            maxWidth: '20%',
+          }}
+        >
+          GUEST LOGIN
+        </Button>
+                </FlexBetween>
             <Typography
               onClick={() => {
                 setPageType(isLogin ? "register" : "login");
@@ -265,6 +396,7 @@ const Form = () => {
                 ? "Don't have an account? Sign Up here."
                 : "Already have an account? Login here."}
             </Typography>
+            
           </Box>
         </form>
       )}

@@ -16,6 +16,7 @@ import {
   Button,
   IconButton,
   useMediaQuery,
+  CircularProgress,
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
@@ -24,12 +25,15 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
+import { imageUpload } from "controller/imageUpload";
+import { toast } from "react-toastify";
 
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [post, setPost] = useState("");
+  const [isLoading, setIsLoading] = useState(false); 
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -38,23 +42,41 @@ const MyPostWidget = ({ picturePath }) => {
   const medium = palette.neutral.medium;
 
   const handlePost = async () => {
-    const formData = new FormData();
-    formData.append("userId", _id);
-    formData.append("description", post);
-    if (image) {
-      formData.append("picture", image);
-      formData.append("picturePath", image.name);
-    }
 
-    const response = await fetch(`http://localhost:3001/posts`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
-    });
-    const posts = await response.json();
-    dispatch(setPosts({ posts }));
-    setImage(null);
-    setPost("");
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append("userId", _id);
+      formData.append("description", post);
+      if (image) {
+        const postImageUrl = await imageUpload(image,toast);
+        if (!postImageUrl) {
+        // Image upload failed, return early
+        return;
+      }
+        formData.append("picturePath", postImageUrl);
+      }
+  
+      const response = await fetch(`${process.env.REACT_APP_SERVER}/posts`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+      const posts = await response.json();
+      dispatch(setPosts({ posts }));
+      setImage(null);
+      setPost("");
+    } catch (error) {
+      console.error('Other error:', error);
+
+      // Display another error toast for other errors
+      toast.error('An error occurred. Please try again later.', {
+        position: 'top-right',
+        autoClose: 5000,
+      });
+    }finally {
+      setIsLoading(false); // Set loading state back to false when the request is complete
+    }
   };
 
   return (
@@ -81,7 +103,7 @@ const MyPostWidget = ({ picturePath }) => {
           p="1rem"
         >
           <Dropzone
-            acceptedFiles=".jpg,.jpeg,.png,.mp3,.mp4"
+            acceptedFiles=".jpg,.jpeg,.png,.mp3,.mp4,.mov"
             multiple={false}
             maxSize={25 * 1024 * 1024} // 25MB in bytes
             onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
@@ -155,6 +177,19 @@ const MyPostWidget = ({ picturePath }) => {
           </FlexBetween>
         )}
 
+        {isLoading ? (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          <CircularProgress size={48} color="primary" />
+        </div>
+      ) : (
         <Button
           disabled={!post}
           onClick={handlePost}
@@ -162,10 +197,13 @@ const MyPostWidget = ({ picturePath }) => {
             color: palette.background.alt,
             backgroundColor: palette.primary.main,
             borderRadius: "3rem",
+            opacity: 1,
+            transition: 'opacity 0.3s ease-in', // Add a transition effect for smooth hiding/showing
           }}
         >
           POST
         </Button>
+      )}
       </FlexBetween>
     </WidgetWrapper>
   );

@@ -1,6 +1,8 @@
 import { Box } from "@mui/material";
 
 const UserImage = ({ image, size = "60px" }) => {
+  // Check if 'image' is defined before using the 'replace' method
+  const modifiedUrl = image ? image.replace(/\/upload\//, `/upload/c_fill,w_${100},h_${100}/`) : '';
   return (
     <Box width={size} height={size}>
       <img
@@ -8,7 +10,7 @@ const UserImage = ({ image, size = "60px" }) => {
         width={size}
         height={size}
         alt="user"
-        src={`http://localhost:3001/assets/${image}`}
+        src={`${modifiedUrl}`}
       />
     </Box>
   );
