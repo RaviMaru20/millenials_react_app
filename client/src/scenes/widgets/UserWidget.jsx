@@ -4,7 +4,7 @@ import {
   LocationOnOutlined,
   WorkOutlineOutlined,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme, Menu, MenuItem } from "@mui/material";
+import { Box, Typography, Divider, useTheme, MenuItem, Menu } from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -12,32 +12,27 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { imageUpload } from "controller/imageUpload";
+import { setLogin } from "state";
+import { useDispatch } from 'react-redux';
 
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
-  const [showDropdown, setShowDropdown] = useState(false); // State to control dropdown visibility
-  const [newPicture, setNewPicture] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null); // State to store the new profile picture
+  const dispatch = useDispatch(); 
   const { palette } = useTheme();
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
-
-  const getUser = async () => {
-    const response = await fetch(`${process.env.REACT_APP_SERVER}/users/${userId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    setUser(data);
-  };
+  const [anchorEl, setAnchorEl] = useState(null); // State to anchor the menu
+  const [newPicture, setNewPicture] = useState(null); // State to store the new profile picture
+  // ... other state and variables
 
   const handlePictureUpload = async (acceptedFiles) => {
+    // ... Same code as before for image upload
     const updatedProfilePicture = await imageUpload(acceptedFiles[0]);
-    try {
-      const response = await fetch(`${process.env.REACT_APP_SERVER}/users/${userId}/profile-picture`, {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_SERVER}/users/${userId}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -46,21 +41,24 @@ const UserWidget = ({ userId, picturePath }) => {
       body: JSON.stringify({ picturePath: updatedProfilePicture }),
     });
 
-      if (response.ok) {
-        // Successfully updated the profile picture on the server
-        const data = await response.json();
-        setNewPicture(data.picturePath); // Update the state with the new picture URL
-      } else {
-        // Handle error if the image upload fails
-        console.error("Image upload failed");
-      }
-
-
-    } catch (error) {
-      console.error("Error:", error);
+    if (response.ok) {
+      // Successfully updated the profile picture on the server
+      const { picturePath } = await response.json()
+      console.log("New picturePath:", picturePath); 
+      dispatch(setLogin({
+          user: {
+            ...user, // Include other user data
+            picturePath: picturePath, // Update the picturePath
+          },
+          token: token,
+        }));
+    } else {
+      // Handle error if the image upload fails
+      console.error("Image upload failed");
     }
-
-
+  } catch (error) {
+    console.error("Error:", error);
+  }
   };
 
   const openFileUploader = () => {
@@ -80,10 +78,18 @@ const UserWidget = ({ userId, picturePath }) => {
     // Close the menu
     setAnchorEl(null);
   };
+  const getUser = async () => {
+    const response = await fetch(`${process.env.REACT_APP_SERVER}/users/${userId}`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await response.json();
+    setUser(data);
+  };
 
   useEffect(() => {
     getUser();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [newPicture]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
     return null;
@@ -126,7 +132,7 @@ const UserWidget = ({ userId, picturePath }) => {
             <Typography color={medium}>{friends.length} friends</Typography>
           </Box>
         </FlexBetween>
-          <Box>
+        <Box>
         {/* Add an invisible file input element */}
         <input
           type="file"

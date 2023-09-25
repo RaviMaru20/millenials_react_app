@@ -17,6 +17,9 @@ export const authSlice = createSlice({
     setLogin: (state, action) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
+      if (action.payload.picturePath) {
+        state.user.picturePath = action.payload.picturePath;
+      }
     },
     setLogout: (state) => {
       state.user = null;
@@ -44,6 +47,13 @@ export const authSlice = createSlice({
       // Filter out the deleted post from the state
       state.posts = state.posts.filter((post) => post._id !== postIdToDelete);
     },
+    setProfilePicture: (state, action) => {
+      if (state.user) {
+        state.user.picturePath = action.payload.picturePath;
+      } else {
+        console.error("User not logged in.");
+      }
+    },
   },
 });
 
@@ -55,5 +65,6 @@ export const {
   setPosts,
   setPost,
   deletePost,
+  setProfilePicture,
 } = authSlice.actions;
 export default authSlice.reducer;

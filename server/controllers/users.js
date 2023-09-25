@@ -66,12 +66,19 @@ export const updateProfilePicture = async (req, res) => {
   try {
     const { userId } = req.params;
     const { picturePath } = req.body;
+    console.log(req.body);
     const user = await User.findById(userId);
+    console.log(userId);
+    if (!user) {
+      console.log("Note found");
+    }
+    console.log(user.picturePath);
 
     user.picturePath = picturePath;
 
     // Save the updated user
     await user.save();
+
     res.status(200).json({
       message: "Profile picture updated successfully",
       picturePath: user.picturePath,

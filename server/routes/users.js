@@ -21,7 +21,7 @@ router.get("/:id/friends", verifyToken, getUserFriends);
 /********************** UPDATE *************************/
 // "addRemoveFriends" defined in "../controllers/auth.js"
 router.patch("/:id/:friendid", verifyToken, addRemoveFriend);
-router.patch("/:id/profile-picture", verifyToken, updateProfilePicture);
+router.patch("/:userId", verifyToken, updateProfilePicture);
 export default router;
 
 /* INFO */
