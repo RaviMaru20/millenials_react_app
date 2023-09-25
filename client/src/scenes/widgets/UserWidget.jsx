@@ -21,6 +21,7 @@ const UserWidget = ({ userId, picturePath }) => {
   const { palette } = useTheme();
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
+  const loggedInUserId = useSelector((state) => state.user._id);
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
@@ -141,10 +142,12 @@ const UserWidget = ({ userId, picturePath }) => {
           accept=".jpg, .jpeg, .png"
           onChange={(e) => handlePictureUpload(e.target.files)}
         />
-        <ManageAccountsOutlined
-          onClick={handleMenuOpen}
-          sx={{ color: main, cursor: "pointer" }}
-        />
+        {loggedInUserId === userId && (
+  <ManageAccountsOutlined
+    onClick={handleMenuOpen}
+    sx={{ color: main, cursor: "pointer" }}
+  />
+)}
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}

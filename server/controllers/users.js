@@ -1,3 +1,4 @@
+import Post from "../models/Post.js";
 import User from "../models/User.js";
 
 /* READ */
@@ -77,6 +78,7 @@ export const updateProfilePicture = async (req, res) => {
     user.picturePath = picturePath;
 
     // Save the updated user
+    await Post.updateMany({ userId: userId }, { userPicturePath: picturePath });
     await user.save();
 
     res.status(200).json({
