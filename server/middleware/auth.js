@@ -3,8 +3,6 @@ import jwt from "jsonwebtoken";
 /* TOKEN AUTHORIZATION */
 export const verifyToken = async (req, res, next) => {
   try {
-    console.log(req);
-
     // extract Authorization from recieved data of frontend
     let token = req.header("Authorization");
 

@@ -33,7 +33,6 @@ export const getUserFriends = async (req, res) => {
 /* UPDATE */
 export const addRemoveFriend = async (req, res) => {
   try {
-    console.log(req.params);
     const { id, friendid } = req.params;
     const user = await User.findById(id);
     const friend = await User.findById(friendid);
@@ -58,6 +57,25 @@ export const addRemoveFriend = async (req, res) => {
     );
 
     res.status(200).json(formattedFriends);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const updateProfilePicture = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { picturePath } = req.body;
+    const user = await User.findById(userId);
+
+    user.picturePath = picturePath;
+
+    // Save the updated user
+    await user.save();
+    res.status(200).json({
+      message: "Profile picture updated successfully",
+      picturePath: user.picturePath,
+    });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
