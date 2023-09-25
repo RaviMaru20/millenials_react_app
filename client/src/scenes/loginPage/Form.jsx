@@ -85,13 +85,13 @@ const randomImageUrl = imageUrls[randomIndex];
             const imageUrl = await imageUpload(values.picture, toast); // Add toast here
             formData.append("picturePath", imageUrl);
         }
-      formData.append(
-        "location",
-        values.location || getRandomName("planet"));
+       if (!values.location) {
+      formData.append("location", getRandomName("planet"));
+    }
 
-      formData.append(
-        "occupation",
-        values.occupation || getRandomName("occupation"));
+    if (!values.occupation) {
+      formData.append("occupation", getRandomName("occupation"));
+    }
 
       const savedUserResponse = await fetch(
         `${process.env.REACT_APP_SERVER}/auth/register`,
