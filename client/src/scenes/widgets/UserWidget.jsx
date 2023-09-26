@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { imageUpload } from "controller/imageUpload";
-import { setLogin } from "state";
+import { setLogin, setProfilePicture } from "state";
 import { useDispatch } from 'react-redux';
 
 const UserWidget = ({ userId, picturePath }) => {
@@ -53,6 +53,7 @@ const UserWidget = ({ userId, picturePath }) => {
           },
           token: token,
         }));
+        dispatch(setProfilePicture({ userId, picturePath }));
     } else {
       // Handle error if the image upload fails
       console.error("Image upload failed");

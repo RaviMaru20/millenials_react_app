@@ -50,6 +50,16 @@ export const authSlice = createSlice({
     setProfilePicture: (state, action) => {
       if (state.user) {
         state.user.picturePath = action.payload.picturePath;
+
+        // Update userPicturePath in posts
+        if (state.posts.length > 0) {
+          const { userId, picturePath } = action.payload;
+          state.posts = state.posts.map((post) =>
+            post.userId === userId
+              ? { ...post, userPicturePath: picturePath }
+              : post
+          );
+        }
       } else {
         console.error("User not logged in.");
       }
