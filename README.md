@@ -1,4 +1,7 @@
-# ![Screenshot 2023-10-03 at 1 57 35 AM](https://github.com/RaviMaru20/millenials_react_app/assets/33301239/9ff26250-b426-4d76-ad12-d6f969dce981): [Social Media Full-Stack Application](https://millenials.netlify.app)
+# Millenials: [Social Media Full-Stack Application](https://millenials.netlify.app)
+<a href="https://millenials.netlify.app" target="_blank">
+  <img src="https://github.com/RaviMaru20/millenials_react_app/assets/33301239/a04c33fd-76e3-48e0-b610-7a4a84684798" alt="Screenshot">
+</a>
 
 
 
