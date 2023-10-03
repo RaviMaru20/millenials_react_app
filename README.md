@@ -1,8 +1,7 @@
-# Millenials: Social Media Full-Stack Application
+# ![Screenshot 2023-10-03 at 1 57 35 AM](https://github.com/RaviMaru20/millenials_react_app/assets/33301239/9ff26250-b426-4d76-ad12-d6f969dce981)
+: [Social Media Full-Stack Application](https://millenials.netlify.app)
 
-<a href="https://millenials.netlify.app">
-  <img src="https://res.cloudinary.com/dpwq056hv/image/upload/v1696313338/xdmkinlxnzcnvlnorym8.png" alt="Screenshot">
-</a>
+
 
 
 
