@@ -12,11 +12,11 @@
 Millenials is a modern social media platform designed to cater to the digital-savvy generation. Developed using the MERN stack (MongoDB, Express.js, React, and Node.js), this application represents a culmination of cutting-edge development technologies and industry-standard best practices.
 
 ## Screenshots
-```markdown
+
 ![Screenshot 2023-10-03 at 1 49 12 AM](https://github.com/RaviMaru20/millenials_react_app/assets/33301239/d2a50fad-8dc3-44ca-a5ef-768961c3d762)
 
 ![Screenshot 2023-10-03 at 1 49 23 AM](https://github.com/RaviMaru20/millenials_react_app/assets/33301239/c71c1cf4-cdcc-4d2b-a46a-2ab2a5a36b65)
-```
+
 
 ## Key Achievements and Contributions
 
