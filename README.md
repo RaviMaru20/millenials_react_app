@@ -1,7 +1,7 @@
 # Millenials: Social Media Full-Stack Application
 
 <a href="https://millenials.netlify.app">
-  <img src="https://github.com/RaviMaru20/millenials_react_app/assets/33301239/a04c33fd-76e3-48e0-b610-7a4a84684798" alt="Screenshot">
+  <img src="https://res.cloudinary.com/dpwq056hv/image/upload/v1696313338/xdmkinlxnzcnvlnorym8.png" alt="Screenshot">
 </a>
 
 
