@@ -48,14 +48,17 @@ Developed an Express.js backend with multiple routes, utilizing MongoDB for data
 - Database modeling and management with MongoDB cloud database.
 - Modular and scalable code architecture.
 
-## Installation and Usage
-
-Provide instructions on how to install and run your application locally.
-
-## Contributing
-
-Explain how others can contribute to your project. Include guidelines for submitting pull requests.
-
 ## License
 
-Specify the license under which your application is distributed.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+The MIT License is a permissive open-source license that allows others to use, modify, and distribute your code as long as they include the original copyright notice and disclaimers. You can replace "MIT License" with the specific license you choose.
+
+If you want to use a different license, you can explore various open-source licenses, such as:
+
+- [GNU General Public License (GPL)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+- [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+- [MIT License](https://opensource.org/licenses/MIT)
+- [Creative Commons Licenses](https://creativecommons.org/licenses/)
+
+Make sure to include the full text of the chosen license in a file named `LICENSE` in your repository so that others can easily access the terms and conditions of your project's license. You can also provide a brief summary of the license's terms in your README.md, as shown in the example above.
