@@ -1,8 +1,6 @@
 # Millenials: Social Media Full-Stack Application
 
-<p align="center">
-  <img src="link_to_your_logo.svg" alt="Millenials Logo" width="200">
-</p>
+![Screenshot 2023-10-03 at 1 57 35 AM](https://github.com/RaviMaru20/millenials_react_app/assets/33301239/a04c33fd-76e3-48e0-b610-7a4a84684798)
 
 **Millenials** is a comprehensive social media application developed using the MERN stack (MongoDB, Express.js, React, and Node.js). It showcases proficiency in cutting-edge development technologies and industry-standard best practices.
 
