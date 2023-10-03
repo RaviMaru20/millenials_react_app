@@ -1,8 +1,9 @@
 # Millenials: Social Media Full-Stack Application
 
 <a href="https://millenials.netlify.app">
-  <img src="https://raw.githubusercontent.com/RaviMaru20/millenials_react_app/assets/33301239/a04c33fd-76e3-48e0-b610-7a4a84684798" alt="Screenshot">
+  <img src="https://github.com/RaviMaru20/millenials_react_app/assets/33301239/a04c33fd-76e3-48e0-b610-7a4a84684798" alt="Screenshot">
 </a>
+
 
 
 **Millenials** is a comprehensive social media application developed using the MERN stack (MongoDB, Express.js, React, and Node.js). It showcases proficiency in cutting-edge development technologies and industry-standard best practices.
