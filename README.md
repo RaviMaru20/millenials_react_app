@@ -1,5 +1,5 @@
 
-#[![Screenshot 2023-10-03 at 2 22 56 AM](https://github.com/RaviMaru20/millenials_react_app/assets/33301239/d334eb79-1f86-40d5-b5eb-395bc901ad67):[Click Here to open LIVE application](https://millenials.netlify.app)]
+[![Screenshot 2023-10-03 at 2 22 56 AM](https://github.com/RaviMaru20/millenials_react_app/assets/33301239/d334eb79-1f86-40d5-b5eb-395bc901ad67)](https://millenials.netlify.app) <h1>[Click Here to open LIVE application](https://millenials.netlify.app)</h1>
 
 
 
