@@ -18,6 +18,7 @@ import FlexBetween from "components/FlexBetween";
 import { imageUpload } from "controller/imageUpload";
 import { toast } from "react-toastify";
 import { getRandomName } from "controller/nameGenerator";
+import { API_URL } from "controller/urlObj";
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -94,7 +95,7 @@ const randomImageUrl = imageUrls[randomIndex];
     }
 
       const savedUserResponse = await fetch(
-        `${process.env.REACT_APP_SERVER}/auth/register`,
+        `${API_URL}/auth/register`,
         {
           method: "POST",
           body: formData,
@@ -134,7 +135,7 @@ const randomImageUrl = imageUrls[randomIndex];
 
   const login = async (values, onSubmitProps) => {
   try {
-    const loggedInResponse = await fetch(`${process.env.REACT_APP_SERVER}/auth/login`, {
+    const loggedInResponse = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
@@ -171,7 +172,7 @@ const randomImageUrl = imageUrls[randomIndex];
  };
  const guestLogin = async ( onSubmitProps) => {
   try {
-    const loggedInResponse = await fetch(`${process.env.REACT_APP_SERVER}/auth/login`, {
+    const loggedInResponse = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: "guest@login.com", password: "123456789"}),

@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import { imageUpload } from "controller/imageUpload";
 import { toast } from "react-toastify";
+import { API_URL } from "controller/urlObj";
 
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
@@ -57,7 +58,7 @@ const MyPostWidget = ({ picturePath }) => {
         formData.append("picturePath", postImageUrl);
       }
   
-      const response = await fetch(`${process.env.REACT_APP_SERVER}/posts`, {
+      const response = await fetch(`${API_URL}/posts`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,

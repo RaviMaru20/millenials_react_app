@@ -8,6 +8,7 @@ import { Box, Divider, IconButton, Input, Typography, useTheme } from "@mui/mate
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
+import { API_URL } from "controller/urlObj";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -50,7 +51,7 @@ const [isAddingComment, setIsAddingComment] = useState(false); // State to toggl
       return; // Prevent adding empty comments
     }
 
-    const response = await fetch(`${process.env.REACT_APP_SERVER}/posts/${postId}/comment`, {
+    const response = await fetch(`${API_URL}/posts/${postId}/comment`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -89,7 +90,7 @@ const toggleMuteUnmute = () => {
 const handleDeletePost = async () => {
   try {
     // Send a DELETE request to your server to delete the post
-    await fetch(`${process.env.REACT_APP_SERVER}/posts/${postId}/post`, {
+    await fetch(`${API_URL}/posts/${postId}/post`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -114,7 +115,7 @@ const handleDeletePost = async () => {
 };
 
   const patchLike = async () => {
-    const response = await fetch(`${process.env.REACT_APP_SERVER}/posts/${postId}/like`, {
+    const response = await fetch(`${API_URL}/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,

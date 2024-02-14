@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { imageUpload } from "controller/imageUpload";
 import { setLogin, setProfilePicture } from "state";
 import { useDispatch } from 'react-redux';
+import { API_URL } from "controller/urlObj";
 
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
@@ -33,7 +34,7 @@ const UserWidget = ({ userId, picturePath }) => {
     // ... Same code as before for image upload
     const updatedProfilePicture = await imageUpload(acceptedFiles[0]);
   try {
-    const response = await fetch(`${process.env.REACT_APP_SERVER}/users/${userId}`, {
+    const response = await fetch(`${API_URL}/users/${userId}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -81,7 +82,7 @@ const UserWidget = ({ userId, picturePath }) => {
     setAnchorEl(null);
   };
   const getUser = async () => {
-    const response = await fetch(`${process.env.REACT_APP_SERVER}/users/${userId}`, {
+    const response = await fetch(`${API_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
